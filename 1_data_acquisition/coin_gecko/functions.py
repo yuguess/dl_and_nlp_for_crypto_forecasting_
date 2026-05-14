@@ -20,16 +20,15 @@ def get_data(coin: str = 'bitcoin', prefix: bool = True):
 
     url = 'https://api.coingecko.com/api/v3/coins/'
 
+    start_time = '2019-01-01'
     if coin == 'bitcoin':
-        start_time = '28-04-2013'
         prefix = 'btc_'
     elif coin == 'ethereum':
-        start_time = '07-08-2015'
         prefix = 'eth_'
     else:
         raise ValueError(f'Coin not supported: {coin}')
 
-    c_time = datetime.strptime(start_time, '%d-%m-%Y')
+    c_time = datetime.strptime(start_time, '%Y-%m-%d')
 
     data_final = pd.DataFrame()
 
@@ -51,8 +50,7 @@ def get_data(coin: str = 'bitcoin', prefix: bool = True):
         data_dict = response.json()
             
         if list(data_dict.keys())[0] == 'error':
-            raise BaseException(
-                f'URL returned error: {list(data_dict.values())[0]}')
+            raise BaseException(f'URL returned error: {list(data_dict.values())[0]}')
             
         # convert data json to pandas dataframe
         timestamp = date.timestamp()
