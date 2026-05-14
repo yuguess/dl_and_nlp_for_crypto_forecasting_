@@ -17,15 +17,10 @@ vix_data = yf.download('^VIX',
                        end=end_date)
 
 # Fetch historical COMEX gold prices in USD
-gold_data = yf.download('GC=F',
-                        start=start_date,
-                        end=end_date)
+gold_data = yf.download('GC=F', start=start_date, end=end_date)
 
 # Concatenate into one dataframe and save
-yf_data = pd.concat([sp500_data['Adj Close'],
-                     sp500_data['Volume'],
-                     vix_data['Adj Close'],
-                     gold_data['Adj Close']], axis=1)
+yf_data = pd.concat([sp500_data['Adj Close'], sp500_data['Volume'], vix_data['Adj Close'], gold_data['Adj Close']], axis=1)
 
 yf_data.columns = ['sp500_price',
                    'sp500_volume',

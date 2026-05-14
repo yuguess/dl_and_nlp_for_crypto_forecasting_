@@ -277,11 +277,8 @@ def hyperparameter_opt_lstm():
             best_params = (json.dumps(study.best_params, indent=12)
                            .replace('{\n', '')
                            .replace('\n}', ''))
-            output = f'''
-    Variable: price movement (up or down), model: LSTM
-        Best hyperparameters:
-{best_params}
-        Best value: {study.best_value:.2f} % excess return'''
+            output = f'''Variable: price movement (up or down), model: LSTM Best hyperparameters: {best_params}
+                Best value: {study.best_value:.2f} % excess return'''
         
             with open(f'optuna_results_{args.mode}.txt', 'a') as f:
                 f.write('\n' + output)
@@ -487,9 +484,7 @@ def hyperparameter_opt_lstm():
                 return result[3]
 
             # Run optuna study
-            study = optuna.create_study(
-                direction='maximize',
-                study_name=STUDY_NAME)
+            study = optuna.create_study(direction='maximize', study_name=STUDY_NAME)
             study.optimize(objective, n_trials=args.iter)
             
             # Log optuna summary plots to W&B
@@ -512,12 +507,8 @@ def hyperparameter_opt_lstm():
             best_params = (json.dumps(study.best_params, indent=12)
                            .replace('{\n', '')
                            .replace('\n}', ''))
-            output = f'''
-    Variable: extrema (min/max), +/- {timeframe} days, model: LSTM
-
-        Best hyperparameters:
-{best_params}
-        Best value: {study.best_value:.2f} % excess return'''
+            output = f'''Variable: extrema (min/max), +/- {timeframe} days, model: LSTM Best hyperparameters:{best_params}
+                Best value: {study.best_value:.2f} % excess return'''
 
             with open(f'optuna_results_{args.mode}.txt', 'a') as f:
                 f.write('\n' + output)
@@ -526,8 +517,7 @@ def hyperparameter_opt_lstm():
             f.write('\n'*2)
 
     print(f'Done! Hyperparameter optimisation results saved as `optuna_results_{args.mode}.txt`.')
-    
+
 
 if __name__=='__main__':
-    
     hyperparameter_opt_lstm()
