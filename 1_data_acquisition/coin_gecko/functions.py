@@ -12,9 +12,9 @@ from datetime import datetime, timedelta
 
 from utils.wrappers import timeit, telegram_notify
 
+# @telegram_notify
 
 @timeit
-@telegram_notify
 def get_data(coin: str = 'bitcoin', prefix: bool = True):
     ''' Get historic data from CoinGecko for BTC or ETH. '''
 

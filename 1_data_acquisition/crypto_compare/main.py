@@ -217,5 +217,4 @@ if __name__=='__main__':
     prefix = 'btc_volatility_index_'
 
     btc_volatility = get_data(feature, params, prefix)
-    btc_volatility.to_parquet(
-        'btc_volatility_hourly.parquet.gzip', compression='gzip')
+    btc_volatility.to_parquet('btc_volatility_hourly.parquet.gzip', compression='gzip')
