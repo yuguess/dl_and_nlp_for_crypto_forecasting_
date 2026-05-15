@@ -47,10 +47,7 @@ def hyperparameter_opt_lstm():
         help=f'(str) mode for the analysis, available modes: {modes}, defaults to `causal_stationary_nlp_pretrained`',
     )
     parser.add_argument(
-        '-f',
-        '--folds',
-        type=int,
-        default=7,
+        '-f', '--folds', type=int, default=7,
         help='number of folds for each time series cross validation, default = 7',
     )
     parser.add_argument(
@@ -62,19 +59,16 @@ def hyperparameter_opt_lstm():
     )
     args = parser.parse_args()
 
-    print(f'\n{args}\n')
+    print(f'\nargs:{args}\n')
     
     if args.mode not in modes:
         raise ValueError(f'Selected mode `{args.mode}` is invalid. Please select one of the following modes: {modes}')
 
     # Print args to results file
     with open(f'optuna_results_{args.mode}.txt', 'w') as f:
-        f.write(f'''Args:
-    Optimising profit based on time series cross validation with {args.folds*2} folds.
-    Optuna running {args.iter} trial runs per model.\n\n''')
+        f.write(f"Args: Optimising profit based on time series cross validation with {args.folds*2} folds. Optuna running {args.iter} trial runs per model.\n\n")
     
     for coin in ('btc', 'eth'):
-        
         cv_config = {
             'add_constant_sliding_window': False,
             'cutoff_tuning': False,
@@ -91,11 +85,10 @@ def hyperparameter_opt_lstm():
         targets = pd.read_parquet(f'../../../2_data_processing/numeric_data/{coin}_targets.parquet.gzip')
 
         if coin == 'btc':
-            data = (pd.concat([numeric_data, nlp_data], axis=1)
-                    .loc[1314662400:1678752000])
+            data = (pd.concat([numeric_data, nlp_data], axis=1).loc[1314662400:1678752000])
         elif coin == 'eth':
-            data = (pd.concat([numeric_data, nlp_data], axis=1)
-                    .loc[1445472000:1678838400])
+            data = (pd.concat([numeric_data, nlp_data], axis=1).loc[1445472000:1678838400])
+
         data = (data.fillna(method='ffill')
                     .fillna(0)
                     .replace([np.inf, -np.inf], 0))
@@ -251,10 +244,7 @@ def hyperparameter_opt_lstm():
                 return result[3]
 
             # Run optuna study
-            study = optuna.create_study(
-                direction='maximize',
-                study_name=STUDY_NAME,
-            )
+            study = optuna.create_study(direction='maximize', study_name=STUDY_NAME)
             study.optimize(objective, n_trials=args.iter)
                         
             # Log optuna summary plots to W&B

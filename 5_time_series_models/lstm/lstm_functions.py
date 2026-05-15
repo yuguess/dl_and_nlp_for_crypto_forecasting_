@@ -194,11 +194,7 @@ class LSTM():
 
         # Define callbacks
         if early_stopping:
-            callback = [
-                keras.callbacks.EarlyStopping(monitor='val_loss',
-                                              patience=patience,
-                                              min_delta=0)
-            ]
+            callback = [keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, min_delta=0)]
         else:
             callback = []
             

@@ -23,7 +23,7 @@ if __name__=='__main__':
     prefix = 'btc_price_'
 
     btc_price = get_data(feature, params, 'btc', prefix).drop(columns=drop_columns)
-    
+
     #--------------------------------------------------------------------------
 
     # get (todays) aggregated exchange volume for various currencies
@@ -58,7 +58,7 @@ if __name__=='__main__':
         prefix = 'btc_exchange_' + i + '_'
         data = get_data(feature, params, 'btc', prefix)
         btc_exchange_vol = pd.concat([data, btc_exchange_vol], axis=1)
-        
+
     #--------------------------------------------------------------------------
 
     # # get (yesterdays) blockchain data
@@ -114,7 +114,7 @@ if __name__=='__main__':
 
     eth_price = get_data(feature, params, 'eth',
                          prefix).drop(columns=drop_columns)
-    
+
     #--------------------------------------------------------------------------
 
     # get (todays) aggregated exchange volume for various currencies
@@ -149,48 +149,41 @@ if __name__=='__main__':
         prefix = 'eth_exchange_' + i + '_'
         data = get_data(feature, params, 'eth', prefix)
         eth_exchange_vol = pd.concat([data, eth_exchange_vol], axis=1)
-        
+
     #--------------------------------------------------------------------------
 
-    # get (yesterdays) blockchain data
-    feature = 'blockchain/histo/day'
-    params = {'fsym': 'ETH',
-              'auth_key': auth_key}
-    drop_columns = ['eth_id', 'eth_symbol']
-
-    eth_blockchain = (get_data(feature, params, 'eth', 'eth_', itype=1)
-                      .drop(columns=drop_columns))
-    eth_blockchain.loc[max(eth_blockchain.index)+86400, :] = None
-    eth_blockchain = eth_blockchain.shift(1)
-
-    #------------------------------------------------------------------------------
-
-    # get (yesterdays) staking rate
-    feature = 'blockchain/staking/histoday'
-    params = {'fsym': 'ETH',
-              'auth_key': auth_key}
-    prefix = 'eth_staking_'
-    drop_columns = ['eth_staking_issued_ts', 'eth_staking_issued_date']
-
-    eth_staking_rate = (get_data(feature, params, 'eth', prefix, itype=1)
-                        .drop(columns=drop_columns))
-    eth_staking_rate.loc[max(eth_staking_rate.index)+86400, :] = None
-    eth_staking_rate = eth_staking_rate.shift(1)
+    # # get (yesterdays) blockchain data
+    # feature = 'blockchain/histo/day'
+    # params = {'fsym': 'ETH',
+    #           'auth_key': auth_key}
+    # drop_columns = ['eth_id', 'eth_symbol']
+    #
+    # eth_blockchain = (get_data(feature, params, 'eth', 'eth_', itype=1)
+    #                   .drop(columns=drop_columns))
+    # eth_blockchain.loc[max(eth_blockchain.index)+86400, :] = None
+    # eth_blockchain = eth_blockchain.shift(1)
+    #
+    # #------------------------------------------------------------------------------
+    #
+    # # get (yesterdays) staking rate
+    # feature = 'blockchain/staking/histoday'
+    # params = {'fsym': 'ETH',
+    #           'auth_key': auth_key}
+    # prefix = 'eth_staking_'
+    # drop_columns = ['eth_staking_issued_ts', 'eth_staking_issued_date']
+    #
+    # eth_staking_rate = (get_data(feature, params, 'eth', prefix, itype=1).drop(columns=drop_columns))
+    # eth_staking_rate.loc[max(eth_staking_rate.index)+86400, :] = None
+    # eth_staking_rate = eth_staking_rate.shift(1)
 
     #------------------------------------------------------------------------------
 
     # concatenate all dataframes into one and save
     dataframes = [
-        eth_price,
-        eth_currency_vol,
-        eth_exchange_vol,
-        eth_blockchain,
-        eth_staking_rate
-    ]
+        eth_price, eth_currency_vol, eth_exchange_vol] #eth_blockchain, eth_staking_rate]
 
     eth_data = pd.concat(dataframes, axis=1).sort_index()
     eth_data.to_parquet('eth_data.parquet.gzip', compression='gzip')
-
 
     #--------------------------------------------------------------------------
     # Fetch crypto index data
@@ -205,8 +198,7 @@ if __name__=='__main__':
         params = {'indexName': i,
                   'auth_key': auth_key}
         prefix = 'index_' + i + '_'
-        indices = pd.concat(
-            [get_data(feature, params, prefix), indices], axis=1)
+        indices = pd.concat([get_data(feature, params, i, prefix), indices], axis=1)
 
     indices.sort_index().to_parquet('indices_data.parquet.gzip', compression='gzip')
 
@@ -216,5 +208,5 @@ if __name__=='__main__':
               'auth_key': auth_key}
     prefix = 'btc_volatility_index_'
 
-    btc_volatility = get_data(feature, params, prefix)
+    btc_volatility = get_data(feature, params, 'btc', prefix)
     btc_volatility.to_parquet('btc_volatility_hourly.parquet.gzip', compression='gzip')

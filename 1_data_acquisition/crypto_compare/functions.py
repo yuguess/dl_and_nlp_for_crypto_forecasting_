@@ -7,7 +7,7 @@ import pandas as pd
 url = 'https://min-api.cryptocompare.com/data/'
 
 api_key = '7ba5169307dac4fb5b4f40729e68b185f4eccd1bc6ab8caef7b3ca0e4fdac030'
-auth_key = '<AUTH_KEY>'
+auth_key = api_key
 
 def get_data(feature: str,
              params: dict,
@@ -19,6 +19,8 @@ def get_data(feature: str,
         start_time = 1314316800
     elif coin=='eth':
         start_time = 1438819200
+    elif coin in ['MVDA', 'MVDALC', 'MVDAMC', 'MVDASC']:
+        start_time = 1546300800
     else:
         raise ValueError(f'Coin not supported: {coin}')
 
@@ -39,7 +41,8 @@ def get_data(feature: str,
     elif itype==2:
         for i in data_dict['Data']:
             data_pandas = pd.concat([data_pandas, pd.DataFrame([i])])
-            
+
+    # print(data_pandas)
     # set index to unix time
     data_pandas = data_pandas.set_index('time')
     
@@ -53,9 +56,11 @@ def get_data(feature: str,
     # iterate in batches of 2000 time steps until full data is received
     while data_pandas.duplicated().sum() < 1000 and data_pandas[:1].index[0] > start_time and len(data_pandas_new) > 1:
         
-        # fetch json from URL   
+        # fetch json from URL, toTs is to get before this value
         params.update({'toTs': data_pandas[:1].index[0]})
+        print(url + feature, params)
         response = requests.get(url + feature, params)
+        print(response)
         data_dict = json.loads(response.content)
 
         # convert data json to pandas dataframe

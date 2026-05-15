@@ -20,7 +20,7 @@ def get_data(coin: str = 'bitcoin', prefix: bool = True):
 
     url = 'https://api.coingecko.com/api/v3/coins/'
 
-    start_time = '2019-01-01'
+    start_time = '2025-01-01'
     if coin == 'bitcoin':
         prefix = 'btc_'
     elif coin == 'ethereum':

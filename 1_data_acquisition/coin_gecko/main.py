@@ -8,4 +8,3 @@ if __name__ == '__main__':
     
     eth_data = get_data('ethereum')
     eth_data.to_parquet('gecko_eth_data.parquet.gzip', compression='gzip')
-    
