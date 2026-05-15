@@ -3,19 +3,13 @@
 import pandas as pd
 
 def shift_timeseries_by_lags(df, lags, lag_label='lag'):
-    return pd.concat([
-        shift_timeseries_and_create_multiindex_column(df, lag,
-                                                      lag_label=lag_label)
-        for lag in lags], axis=1)
+    return pd.concat(
+        [shift_timeseries_and_create_multiindex_column(df, lag, lag_label=lag_label) for lag in lags], axis=1)
 
-def shift_timeseries_and_create_multiindex_column(
-        dataframe, lag, lag_label='lag'):
-    return (dataframe.shift(lag)
-                     .pipe(append_level_to_columns_of_dataframe,
-                           str(lag), lag_label))
+def shift_timeseries_and_create_multiindex_column(dataframe, lag, lag_label='lag'):
+    return (dataframe.shift(lag).pipe(append_level_to_columns_of_dataframe, str(lag), lag_label))
     
-def append_level_to_columns_of_dataframe(
-        dataframe, new_level, name_of_new_level, inplace=False):
+def append_level_to_columns_of_dataframe(dataframe, new_level, name_of_new_level, inplace=False):
     ''' Given a (possibly MultiIndex) DataFrame, append labels to the column
     labels and assign this new level a name.
 

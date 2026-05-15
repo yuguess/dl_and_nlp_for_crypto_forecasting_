@@ -10,10 +10,7 @@ import optuna
 import wandb
 
 from argparse import ArgumentParser
-from lstm_functions import (
-    crossvalidate_movement_lstm,
-    crossvalidate_extrema_lstm                     
-)
+from lstm_functions import (crossvalidate_movement_lstm, crossvalidate_extrema_lstm)
 from lag_functions import shift_timeseries_by_lags
 from functions import *
 

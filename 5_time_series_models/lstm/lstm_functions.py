@@ -401,8 +401,6 @@ def crossvalidate_movement_lstm(model_args: dict,
     # increasing sliding window
     tss = TimeSeriesSplit(n_splits=folds, **kwargs).split(X)
     for fold, (train_index, test_index) in tqdm(enumerate(tss)):
-
-        print()
         
         if skip_first and fold == 0:
             continue
